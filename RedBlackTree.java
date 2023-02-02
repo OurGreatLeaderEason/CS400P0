@@ -1,3 +1,13 @@
+////////////////P0Rotation//////////////////////////
+//
+//Title:    P0Rotation
+//Course:   CS 400 Spring 2023
+//
+//Author:   Eason Xiao
+//Email:    xiao227@wisc.edu
+//Lecturer: Florian Heimerl
+//
+
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -37,34 +47,12 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
             return context[0] != null && context[0].context[2] == this;
         }
 
-
+        /**
+         * @return true when this node has a parent and is the left child of
+         * that parent, otherwise return false
+         */
         public boolean isLeftChild(){
             return context[0]!=null && context[0].context[1]==this;
-        }
-
-        public boolean hasLeftChild(){
-            return context[1]!=null;
-        }
-
-        public boolean hasRightChild(){
-            return context[2]!=null;
-        }
-
-        public String toString(){
-            String ret="Value: "+this.data;
-            if(hasLeftChild()){
-                ret+="\nLeft: "+this.context[1].data;
-            }
-            else{
-                ret+="\nLeft: null";
-            }
-            if(hasRightChild()){
-                ret+="\nRight: "+this.context[2].data;
-            }
-            else{
-                ret+="\nRight: null";
-            }
-            return ret;
         }
 
     }
@@ -425,17 +413,96 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
     // Do not change the method name or return type of the existing tests.
     // You can run your tests by commenting in the calls to the test methods 
 
+    /**
+     * Tests left and right rotation when parent is root
+     * @return true if implemented correctly, false if otherwise
+     */
     public static boolean test1() {
-        return false;
+        //left rotation
+        RedBlackTree<Integer> tree=new RedBlackTree<Integer>();
+        tree.insert(4);
+        tree.insert(2);
+        tree.insert(6);
+        tree.insert(3);
+        tree.insert(1);
+        tree.insert(5);
+        tree.insert(7);
+        tree.rotate(tree.root.context[1].context[2], tree.root.context[1]);
+        if(!tree.toLevelOrderString().equals("[ 4, 3, 6, 2, 5, 7, 1 ]") || !tree.toInOrderString().equals("[ 1, 2, 3, 4, 5, 6, 7 ]")){
+            return false;
+        }
+        //right rotation
+        RedBlackTree<Integer> tree2=new RedBlackTree<Integer>();
+        tree2.insert(4);
+        tree2.insert(2);
+        tree2.insert(6);
+        tree2.insert(3);
+        tree2.insert(1);
+        tree2.insert(5);
+        tree2.insert(7);
+        tree2.rotate(tree2.root.context[1].context[1], tree2.root.context[1]);
+        if(!tree2.toLevelOrderString().equals("[ 4, 1, 6, 2, 5, 7, 3 ]") || !tree2.toInOrderString().equals("[ 1, 2, 3, 4, 5, 6, 7 ]")){
+            return false;
+        }
+        return true;
     }
     
+    /**
+     * Tests left and right rotation when parent is not root
+     * @return true if implemented correctly, false if otherwise
+     */
     public static boolean test2() {
-        // TODO: Implement this test.
-        return false;
+        //right rotation
+        RedBlackTree<Integer> tree=new RedBlackTree<Integer>();
+        tree.insert(4);
+        tree.insert(2);
+        tree.insert(6);
+        tree.insert(3);
+        tree.insert(1);
+        tree.insert(5);
+        tree.insert(7);
+        tree.rotate(tree.root.context[1], tree.root);
+        if(!tree.toLevelOrderString().equals("[ 2, 1, 4, 3, 6, 5, 7 ]") || !tree.toInOrderString().equals("[ 1, 2, 3, 4, 5, 6, 7 ]")){
+            return false;
+        }
+        //left rotation
+        RedBlackTree<Integer> tree2=new RedBlackTree<Integer>();
+        tree2.insert(4);
+        tree2.insert(2);
+        tree2.insert(6);
+        tree2.insert(3);
+        tree2.insert(1);
+        tree2.insert(5);
+        tree2.insert(7);
+        tree2.rotate(tree2.root.context[2], tree2.root);
+        if(!tree2.toLevelOrderString().equals("[ 6, 4, 7, 2, 5, 1, 3 ]") || !tree2.toInOrderString().equals("[ 1, 2, 3, 4, 5, 6, 7 ]")){
+            return false;
+        }
+        return true;
     }
     
+    /**
+     * Test rotate with 2 unrelated nodes
+     * @return true if IllegalArgumentException is thrown, false otherwise
+     */
     public static boolean test3() {
-        // TODO: Implement this test.
+        try{
+            RedBlackTree<Integer> tree2=new RedBlackTree<Integer>();
+            tree2.insert(4);
+            tree2.insert(2);
+            tree2.insert(6);
+            tree2.insert(3);
+            tree2.insert(1);
+            tree2.insert(5);
+            tree2.insert(7);
+            tree2.rotate(tree2.root.context[2].context[1], tree2.root);
+        }
+        catch(IllegalArgumentException e){
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
         return false;
     }
     
@@ -445,22 +512,12 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
      * @param args
      */
     public static void main(String[] args) {
-        RedBlackTree<Integer> tree=new RedBlackTree<Integer>();
-        tree.insert(4);
-        tree.insert(2);
-        tree.insert(6);
-        tree.insert(3);
-        tree.insert(1);
-        tree.insert(5);
-        tree.insert(7);
-        System.out.println(tree);
-        tree.rotate(tree.root.context[1].context[2], tree.root.context[1]);
-        System.out.println(tree);
-        /* 
+    
+        
         System.out.println("Test 1 passed: " + test1());
         System.out.println("Test 2 passed: " + test2());
         System.out.println("Test 3 passed: " + test3());
-        */
+        
     }
 
 }
